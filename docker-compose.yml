@@ -1,0 +1,41 @@
+version: '2'
+services:
+  grafana:
+    image: grafana/grafana:latest
+    restart: always
+    hostname: grafana1
+    container_name: grafana1
+    ports:
+      - "9030:3000"
+    volumes:
+      - ./data/grafana:/var/lib/grafana
+    networks:
+      default:
+        ipv4_address: 172.75.1.10
+  pushgateway:
+    image: prom/pushgateway:latest
+    restart: always
+    hostname: pushgateway1
+    container_name: pushgeteway1
+    ports:
+      - "9091:9091"
+    networks:
+      default:
+        ipv4_address: 172.75.1.20
+  prometheus:
+    image: prom/prometheus:latest
+    restart: always
+    hostname: prometheus1
+    container_name: prometheus1
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+      - ./data/prometheus:/prometheus
+    networks:
+      default:
+        ipv4_address: 172.75.1.30
+networks:
+  default:
+    external:
+      name: letsparty_network
